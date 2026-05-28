@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>YUYU</title>
+
+<!-- LIBRARY EXCEL -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+/* BODY */
+body{
+
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:
+    url('BGPC.jpg')
+    center/cover no-repeat;
+
+    padding:40px;
+
+    position:relative;
+
+    overflow:auto;
+}
+
+/* Background HP */
+@media(max-width:768px){
+
+    body{
+
+        background:
+        url('bgch.jpg')
+        center/cover no-repeat;
+    }
+}
+
+/* Overlay */
+.overlay{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    background:
+    rgba(0,0,0,0.5);
+
+    top:0;
+    left:0;
+}
+
+/* Logo */
+.logo{
+
+    position:absolute;
+
+    top:15px;
+    left:15px;
+
+    width:75px;
+    height:75px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:3px solid white;
+
+    z-index:2;
+
+    box-shadow:
+    0 0 15px rgba(255,255,255,0.5);
+}
+
+/* Container */
+.container{
+
+    position:relative;
+
+    z-index:2;
+
+    width:100%;
+    max-width:420px;
+
+    background:
+    rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(10px);
+
+    border-radius:20px;
+
+    padding:25px;
+
+    color:white;
+
+    box-shadow:
+    0 0 20px rgba(0,0,0,0.4);
+
+    animation:muncul 1s ease;
+}
+
+/* Animasi */
+@keyframes muncul{
+
+    from{
+
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Judul */
+h1{
+
+    text-align:center;
+
+    font-size:40px;
+
+    margin-bottom:10px;
+
+    color:white;
+
+    text-shadow:
+    0 0 10px cyan,
+    0 0 20px cyan,
+    0 0 40px cyan;
+}
+
+.subtitle{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    opacity:0.8;
+}
+
+/* Form */
+form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+}
+
+input,
+select{
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    outline:none;
+
+    font-size:16px;
+}
+
+/* Button */
+button{
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#00bfff;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+button:hover{
+
+    background:#0099cc;
+}
+
+/* Admin Button */
+.admin-btn{
+
+    margin-top:15px;
+
+    background:#8b5cf6;
+}
+
+.admin-btn:hover{
+
+    background:#6d28d9;
+}
+
+/* Status */
+#status{
+
+    margin-top:15px;
+
+    text-align:center;
+}
+
+/* Total */
+#totalAnggota{
+
+    position:fixed;
+
+    right:15px;
+    bottom:15px;
+
+    z-index:999;
+
+    background:
+    rgba(0,0,0,0.6);
+
+    color:white;
+
+    padding:12px 18px;
+
+    border-radius:15px;
+
+    backdrop-filter:blur(5px);
+
+    box-shadow:
+    0 0 10px cyan;
+}
+
+/* ADMIN PAGE */
+#adminPage{
+
+    display:none;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:#111;
+
+    z-index:9999;
+
+    overflow:auto;
+
+    padding:20px;
+
+    color:white;
+}
+
+#adminPage h2{
+
+    margin-bottom:20px;
+
+    text-align:center;
+}
+
+/* Table */
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:#222;
+}
+
+table th,
+table td{
+
+    border:1px solid #444;
+
+    padding:12px;
+
+    text-align:center;
+}
+
+table th{
+
+    background:#00bfff;
+}
+
+/* Export */
+.export-btn{
+
+    margin-top:20px;
+
+    width:100%;
+
+    background:#00cc66;
+}
+
+.export-btn:hover{
+
+    background:#00994d;
+}
+
+/* Close */
+.close-btn{
+
+    margin-bottom:20px;
+
+    background:#ff4444;
+}
+
+.close-btn:hover{
+
+    background:#cc0000;
+}
+
+/* Tombol Hapus */
+.hapus-btn{
+
+    background:#ff4444;
+
+    color:white;
+
+    border:none;
+
+    padding:8px 12px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+}
+
+.hapus-btn:hover{
+
+    background:#cc0000;
+}
+
+/* Kontak Admin */
+.admin-contact{
+
+    margin-top:15px;
+
+    text-align:center;
+
+    line-height:35px;
+}
+
+.admin-contact a{
+
+    color:#00ffff;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+    display:block;
+}
+
+.admin-contact a:hover{
+
+    text-decoration:underline;
+}
+
+/* Responsive */
+@media(max-width:600px){
+
+    .container{
+        padding:20px;
+    }
+
+    h1{
+        font-size:32px;
+    }
+
+    .logo{
+        width:60px;
+        height:60px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Overlay -->
+<div class="overlay"></div>
+
+<!-- Logo -->
+<img src="logo.png" class="logo">
+
+<!-- TOTAL -->
+<div id="totalAnggota">
+Total: 0
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+    <h1>XI DKV</h1>
+
+    <p class="subtitle">
+    Data Umur Siswa Kelas 11 DKV A,B,C
+    </p>
+
+    <form id="form">
+
+        <!-- NAMA -->
+        <input
+        type="text"
+        id="nama"
+        placeholder="Masukkan Nama"
+        required>
+
+        <!-- OPSI KELAS -->
+        <select id="kelas" required>
+
+            <option value="">
+            Pilih Kelas
+            </option>
+
+            <option value="XI DKV A">
+            XI DKV A
+            </option>
+
+            <option value="XI DKV B">
+            XI DKV B
+            </option>
+
+            <option value="XI DKV C">
+            XI DKV C
+            </option>
+
+        </select>
+
+        <!-- UMUR -->
+        <input
+        type="number"
+        id="umur"
+        placeholder="Masukkan Umur"
+        required>
+
+        <!-- BUTTON -->
+        <button type="submit">
+        Daftar
+        </button>
+
+    </form>
+
+    <!-- ADMIN PANEL -->
+    <button
+    class="admin-btn"
+    onclick="bukaAdmin()">
+
+    Admin Panel
+
+    </button>
+
+    <!-- KONTAK ADMIN -->
+    <div class="admin-contact">
+
+        <!-- ADMIN 1 -->
+        <a
+        href="https://wa.me/6289512850395?text=Hai%20admin%20sayang"
+        target="_blank">
+
+        Admin 1 (Yudha)
+
+        </a>
+
+        <!-- ADMIN 2 -->
+        <a
+        href="https://wa.me/6283836330807?text=Hai%20admin%20sayang"
+        target="_blank">
+
+        Admin 2 (Alisa)
+
+        </a>
+
+    </div>
+
+    <p id="status"></p>
+
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="adminPage">
+
+    <button
+    class="close-btn"
+    onclick="tutupAdmin()">
+
+    Tutup Panel
+
+    </button>
+
+    <h2>
+    DATA SELURUH SISWA DKV
+    </h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>No</th>
+                <th>Nama</th>
+                <th>Kelas</th>
+                <th>Umur</th>
+                <th>Hak Admin</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="adminTable">
+
+        </tbody>
+
+    </table>
+
+    <!-- EXPORT -->
+    <button
+    class="export-btn"
+    onclick="exportTable()">
+
+    Export Excel
+
+    </button>
+
+</div>
+
+<script>
+
+/* ELEMENT */
+const form =
+document.getElementById("form");
+
+const statusText =
+document.getElementById("status");
+
+const totalAnggota =
+document.getElementById(
+"totalAnggota");
+
+const adminTable =
+document.getElementById(
+"adminTable");
+
+/* DATA */
+let dataAnggota =
+JSON.parse(
+localStorage.getItem("anggota")
+) || [];
+
+/* UPDATE TOTAL */
+updateTotal();
+
+/* SUBMIT */
+form.addEventListener(
+"submit",
+function(e){
+
+    e.preventDefault();
+
+    const nama =
+    document.getElementById(
+    "nama").value;
+
+    const kelas =
+    document.getElementById(
+    "kelas").value;
+
+    const umur =
+    document.getElementById(
+    "umur").value;
+
+    const data = {
+
+        nama:nama,
+        kelas:kelas,
+        umur:umur
+    };
+
+    dataAnggota.push(data);
+
+    localStorage.setItem(
+
+        "anggota",
+
+        JSON.stringify(dataAnggota)
+    );
+
+    statusText.innerHTML =
+    "Data berhasil disimpan!";
+
+    statusText.style.color =
+    "#7CFF7C";
+
+    form.reset();
+
+    updateTotal();
+});
+
+/* TOTAL */
+function updateTotal(){
+
+    totalAnggota.innerHTML =
+
+    "Total Anggota: " +
+
+    dataAnggota.length;
+}
+
+/* ADMIN PANEL */
+function bukaAdmin(){
+
+    const password = prompt(
+
+    "Masukkan Password Admin");
+
+    if(password === "admin123"){
+
+        document.getElementById(
+        "adminPage").style.display =
+        "block";
+
+        tampilkanTabel();
+
+    }else{
+
+        alert(
+        "Password Salah!");
+    }
+}
+
+/* TUTUP */
+function tutupAdmin(){
+
+    document.getElementById(
+    "adminPage").style.display =
+    "none";
+}
+
+/* TABEL */
+function tampilkanTabel(){
+
+    adminTable.innerHTML = "";
+
+    dataAnggota.forEach(
+    (item,index)=>{
+
+        adminTable.innerHTML += `
+
+        <tr>
+
+            <td>${index+1}</td>
+
+            <td>${item.nama}</td>
+
+            <td>${item.kelas}</td>
+
+            <td>${item.umur}</td>
+
+            <td>
+
+                <button
+                class="hapus-btn"
+                onclick="hapusAdmin(${index})">
+
+                Hapus
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+    });
+}
+
+/* HAPUS DATA */
+function hapusAdmin(index){
+
+    const konfirmasi =
+    confirm(
+    "Yakin ingin menghapus data ini?");
+
+    if(konfirmasi){
+
+        dataAnggota.splice(index,1);
+
+        localStorage.setItem(
+
+            "anggota",
+
+            JSON.stringify(dataAnggota)
+        );
+
+        tampilkanTabel();
+
+        updateTotal();
+
+        alert(
+        "Data berhasil dihapus!");
+    }
+}
+
+/* EXPORT EXCEL */
+function exportTable(){
+
+    const dataExcel = [];
+
+    dataAnggota.forEach(
+    (item,index)=>{
+
+        dataExcel.push({
+
+            No:index+1,
+
+            Nama:item.nama,
+
+            Kelas:item.kelas,
+
+            Umur:item.umur
+
+        });
+
+    });
+
+    const worksheet =
+    XLSX.utils.json_to_sheet(
+    dataExcel);
+
+    const workbook =
+    XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+
+        workbook,
+
+        worksheet,
+
+        "Data Siswa"
+
+    );
+
+    XLSX.writeFile(
+
+        workbook,
+
+        "Data_Siswa_DKV.xlsx"
+
+    );
+}
+
+</script>
+
+</body>
+</html>
